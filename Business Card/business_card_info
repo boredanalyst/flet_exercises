@@ -1,0 +1,48 @@
+-- BACKGROUNDD 
+This is a Linktree/Carrd clone for a fictional character. It has the basic information about the person and along with links and some of their achievements. 
+
+--> SAMPLE PERSON
+The person's details are as follows:
+
+--> PERSONAL DETAILS
+
+Name: Emma Flores
+Nationality: Filipino
+Job: Content Creator
+Age: 26 years old
+
+--> SERVICES
+
+Graphic Design
+Video Editing
+Content Writing
+Social Media Management
+
+--> ACHIEVEMENTS
+
+500+ graphic designs made.
+3 days turnaround for content.
+20% average increase in followers for managed pages.
+
+PROJECT PLAN
+
+--> DESIGN 
+
+The app is divided into three parts
+
+----> UPPER THIRD: INTRODUCTION
+
+Name
+Headline
+SocialMedia Handles / Websites
+Summary
+
+----> MIDDLE THIRDS: SERVICES AND ACHIEVEMENTS
+
+Services ## two rows (2 x 2)
+Achievements ## one row
+
+----> LOWER THIRDS: CONTACT DETAILS
+
+CTA
+Email address + Subscribe Button
