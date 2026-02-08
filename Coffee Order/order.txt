@@ -1,0 +1,5 @@
+--- ORDER ---
+ORDER RECEIVED: 2026-02-07COFFEE TYPE: ['Capuccino', 'Mocha']
+COFFEE SIZE: ['Medium', 'Large']
+COFFEE TEMPERATURE: ['Cold']
+QUANTITY: 12
