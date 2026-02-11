@@ -1,8 +1,9 @@
 import flet as ft
 from datetime import datetime as dt
 import pandas as pd
-
-
+from fpdf import FPDF
+import os
+import random as rand
 
 ## Function loaded upon opening the app
 def displayClock(page: ft.Page, e) -> None:
@@ -17,8 +18,6 @@ def main(page:ft.Page) -> None:
     page.padding=100
     page.theme_mode = ft.ThemeMode.LIGHT
     page.title = "Clock In System"
-
-
 
     ## --> FUNCTIONS <-- ##
 
@@ -48,8 +47,6 @@ def main(page:ft.Page) -> None:
 
                 ## Appending the clockin/clockout buttons, and table
                 col_main.controls.append(col_append)
-                txt_emp_id.disabled = True
-                txt_emp_pin.disabled = True
             else:
                 page.show_dialog(alt_invalid_cred)
         elif len(df) > 1:
@@ -62,6 +59,7 @@ def main(page:ft.Page) -> None:
         record_type = "CLOCK IN"
         emp_id = txt_emp_id.value
         timestamp = dt.now().strftime("%H:%M:%S")
+        datestamp = dt.today().strftime("%Y-%m-%d")
 
         cell_type = ft.DataCell(ft.Text(record_type))
         cell_emp_id = ft.DataCell(ft.Text(emp_id))
@@ -78,11 +76,35 @@ def main(page:ft.Page) -> None:
         )
 
         page.show_dialog(alt_record_success)
+
+        ## Create an FPDF object
+        pdf = FPDF()
+        pdf.add_page() ## Create the page to write on
+        pdf.set_font("Arial", size=12)
+        pdf.set_author("CLOCKSYS")
+        pdf.set_subject("Record")
+        pdf.set_title("CLOCK IN / OUT RECORD")
+
+        ## Writing the form details into a pdf
+        pdf.cell(200, 10, txt="NEW RECORD", ln=True, align="C")
+        pdf.cell(200, 10, txt=f"SAMPLE TYPE: {record_type}", ln=True)
+        pdf.cell(200, 10, txt=f"SAMPLE ID {emp_id}", ln=True)
+        pdf.cell(200, 10, txt=f"SAMPLE TIMESTAMP: {timestamp}", ln=True)
+
+        ## Generate unique record identifier
+        record_id = rand.randint(1111, 9999)
+
+        ## Output the file into a record
+        filename = f'{emp_id}_{datestamp}_{record_id}_clockin.pdf'
+        folder = "ClockIn\receipt"
+        filepath = os.path.join(folder, filename)
+        pdf.output(f"ClockIn\\receipt\\{filename}")
 
     def clockOut(e) -> None:
         record_type = "CLOCK OUT"
         emp_id = txt_emp_id.value
         timestamp = dt.now().strftime("%H:%M:%S")
+        datestamp = dt.today().strftime("%Y-%m-%d")
 
         cell_type = ft.DataCell(ft.Text(record_type))
         cell_emp_id = ft.DataCell(ft.Text(emp_id))
@@ -99,6 +121,29 @@ def main(page:ft.Page) -> None:
         )
 
         page.show_dialog(alt_record_success)
+
+        ## Create an FPDF object
+        pdf = FPDF()
+        pdf.add_page() ## Create the page to write on
+        pdf.set_font("Arial", size=12)
+        pdf.set_author("CLOCKSYS")
+        pdf.set_subject("Record")
+        pdf.set_title("CLOCK IN / OUT RECORD")
+
+        ## Writing the form details into a pdf
+        pdf.cell(200, 10, txt="NEW RECORD", ln=True, align="C")
+        pdf.cell(200, 10, txt=f"SAMPLE TYPE: {record_type}", ln=True)
+        pdf.cell(200, 10, txt=f"SAMPLE ID {emp_id}", ln=True)
+        pdf.cell(200, 10, txt=f"SAMPLE TIMESTAMP: {timestamp}", ln=True)
+
+        ## Generate unique record identifier
+        record_id = rand.randint(1111, 9999)
+
+        ## Output the file into a record
+        filename = f'{emp_id}_{datestamp}_{record_id}_clockout.pdf'
+        folder = "ClockIn\receipt"
+        filepath = os.path.join(folder, filename)
+        pdf.output(f"ClockIn\\receipt\\{filename}")
 
 
 
