@@ -1,5 +1,8 @@
 import flet as ft
 from datetime import datetime as dt
+import pandas as pd
+
+
 
 ## Function loaded upon opening the app
 def displayClock(page: ft.Page, e) -> None:
@@ -15,8 +18,11 @@ def main(page:ft.Page) -> None:
     page.theme_mode = ft.ThemeMode.LIGHT
     page.title = "Clock In System"
 
+
+
     ## --> FUNCTIONS <-- ##
 
+    ## Validate the existence of the account
     def validateEmployee(e) -> None:
         ## Check if the text fields have values
 
@@ -26,8 +32,32 @@ def main(page:ft.Page) -> None:
         elif txt_emp_pin.value == "":
             page.show_dialog(alt_missing_cred)
             return
-        pass
+        
+        ## Loading the employee data from the csv file
+        df = pd.read_csv(r'C:\Users\Louis Garcia\OneDrive\Desktop\Projects\Flet Tutorial\ClockIn\data\employees.csv')
+        
+        ## filter the dataframe
+        df = df[df["employee_id"] == txt_emp_id.value]
+        
+        if len(df) == 1: ## check if there is EXACTLY one account in the database
+            print("Account found")
+            correct_password = df["employee_pin"][0]
+            print(correct_password)
+            if str(txt_emp_pin.value) == str(correct_password): ## checking the if the inputted PIN is correct
+                page.show_dialog(alt_correct_cred)
 
+                ## Appending the clockin/clockout buttons, and table
+                col_main.controls.append(col_append)
+                txt_emp_id.disabled = True
+                txt_emp_pin.disabled = True
+            else:
+                page.show_dialog(alt_invalid_cred)
+        elif len(df) > 1:
+            print("Multiple accounts found.")
+            print("Please contact administrator.")
+        else:
+            page.show_dialog(alt_invalid_cred)
+        
     def clockIn(e) -> None:
         record_type = "CLOCK IN"
         emp_id = txt_emp_id.value
@@ -168,6 +198,22 @@ def main(page:ft.Page) -> None:
         icon=ft.Icons.WARNING
     )
 
+    ## ALERT: Invalid Credentials
+
+    alt_invalid_cred = ft.AlertDialog(
+        title=ft.Text("Error"),
+        content=ft.Text("Invalid Employee ID / PIN"),
+        icon=ft.Icons.WARNING
+    )
+
+    ## ALERT: Correct Credentials
+
+    alt_correct_cred = ft.AlertDialog(
+        title=ft.Text("Success"),
+        content=ft.Text("Account Found!"),
+        icon=ft.Icons.CHECK
+    )
+
     ## --> WRAPPERS <-- ##
 
     ## COLUMN: Clock Display
@@ -210,6 +256,14 @@ def main(page:ft.Page) -> None:
         ], alignment = ft.MainAxisAlignment.CENTER
     )
 
+    ## COLUMN: Appended Column
+    col_append = ft.Column(
+        controls=[
+            row_clock_in_out,
+            row_records
+        ]
+    )
+
     ## COLUMN: Main
     col_main = ft.Column(
         controls=[
@@ -217,9 +271,7 @@ def main(page:ft.Page) -> None:
             ft.Divider(),
             col_emp_info,
             row_login,
-            ft.Divider(),
-            row_clock_in_out,
-            row_records
+            ft.Divider()
         ], spacing=20,
         alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER
